@@ -1,0 +1,109 @@
+#include <stdio.h>
+#include <stdbool.h>
+#include <math.h>
+
+float add(float a, float b) {
+    return a + b;
+}
+float sub(float a, float b) {
+    return a - b;
+}
+float multiply(float a, float b) {
+    return a * b;
+}
+float divide(float a, float b) {
+    return a / b;
+}
+
+float printer[3] = {0.3,0.2,0.15};
+
+
+int main()
+{
+    float *pPrinter = &printer[0];
+    float fees = 0.10; // Change seller fee % (use decimal format)
+    float utilRate = 0.3; // Change to your local utility rate (i.e. $0.30/kWh)
+    int labRate = 25; // Change to your desired labor rate($)
+    float percent = 100;
+    float pTime;
+    float lTime;
+    float mUse;
+    float mCost;
+    float other;
+    int quantity;
+    float margin;
+    int pChoice;
+    float depRate;
+    
+    
+    
+    printf("      3D Printing Cost Calculator in C!\n\n\n");
+    
+    printf("Choose your printer [1=X1C,2=P1S,3=P1P]: ");
+    scanf("%d", &pChoice);
+    
+    switch (pChoice) {
+        case 1:
+        depRate = pPrinter[0];
+        break;
+        case 2:
+        depRate = pPrinter[1];
+        break;
+        case 3:
+        depRate = pPrinter[2];
+        break;
+        default:
+        printf("\nError: Invalid Printer Type!");
+    }
+    
+    printf("\n\nMaterial Cost: $");
+    scanf("%f", &mCost);
+    
+    printf("\n\nItems per plate: x");
+    scanf("%d", &quantity);
+    
+    printf("\n\nMaterial used(kg): ");
+    scanf("%f", &mUse);
+    
+    printf("\n\nPrint Hours: ");
+    scanf("%f", &pTime);
+    
+    printf("\n\nLabor Hours: ");
+    scanf("%f", &lTime);
+    
+    printf("\n\nOther Costs(glue,paint,nuts & bolts etc): $");
+    scanf("%f", &other);
+    
+    printf("\n\nProfit Margin: x");
+    scanf("%f", &margin);
+    
+    float tMatCost = multiply(mCost, mUse) + other;
+    float tDepCost = multiply(pTime, depRate);
+    float tLabCost = multiply(lTime, labRate);
+    float tUtilCost = multiply(pTime, utilRate);
+    float tProdCost = add(add(tMatCost, tDepCost), add(tLabCost, tUtilCost));
+    float tProfit = sub(multiply(tProdCost, margin), tProdCost);
+    float retPrice = multiply(tProdCost, margin);
+    float prodPerItem = divide(tProdCost, quantity);
+    float retPerItem = divide(retPrice, quantity);
+    float profPerItem = divide(tProfit, quantity);
+    float feeCalc = multiply(retPrice, fees);
+    float perUnitFees = multiply(retPerItem, fees);
+    
+    
+    printf("\n\nSummary:");
+    printf("\n        Total Material Cost: $%.2f", tMatCost);
+    printf("\n        Total Depreciation Cost: $%.2f", tDepCost);
+    printf("\n        Total Labor Cost: $%.2f", tLabCost);
+    printf("\n        Total Utility Cost: $%.2f", tUtilCost);
+    printf("\n        Per Unit Production Cost: $%.2f", prodPerItem);
+    printf("\n        Total Production Cost: $%.2f", tProdCost);
+    printf("\n        Per Unit Retail Price: $%.2f", retPerItem);
+    printf("\n        Total Retail Price: $%.2f", retPrice);
+    printf("\n        Per Unit Profit: $%.2f", profPerItem);
+    printf("\n        Total Profit: $%.2f", tProfit);
+    printf("\n        Total Seller Fees: $%.2f", feeCalc);
+    printf("\n        Per Unit Seller Fees: $%.2f", perUnitFees);
+    
+    return 0;
+}
